@@ -75,7 +75,14 @@ $$('a[data-action=guardar]').tap(function() {
     Lungo.Router.back();
 });
 
-//Historial
+//Traer todos los usuarios para sacarle su historial
 $$('#historial-article').on('load', function() {
-	getHistorial();
+	getUserHistorial();   
 });
+
+$$('ul#ulhistorial li').tap(function(){
+	var user = Lungo.dom(this);
+	var user_id = user.attr('id');
+	getHistorial(user_id);   
+});
+

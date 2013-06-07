@@ -39,7 +39,7 @@ function getUsers(){
       template += '<li class="thumb selectable" id="'+result[i].id+'"><strong><a href="#agregarPagoUsu" data-router="section">'+ result[i].name+'</a></strong></li>';  
     } 
     html = Mustache.render(template);
-    $$('#users').html(html); //Aqui es donde se 'pintaría' los datos que estamos consumiendo en JSON  
+    $$('#users').html(html); //Aqui es donde se 'pintaría' los datos
   }//End allusers
 
   Lungo.Data.Sql.select('users', '', allUser);
@@ -65,16 +65,35 @@ return {
   insertPago: insertPago
 }
 
-function getHistorial(){
+function getUserHistorial(){
   var template='', html, allPagos,i;
-
-  allPagos = function(result){
+  allUser = function(result){
     for(i=0, len = result.length; i < len; i++){
-      template += '<li id="'+result[i].id+'"><div class="right">'+result[i].fecha_pago +' - '+result[i].fecha_hasta +'</div><strong>Abono: '+ result[i].abono+' Intereses: '+result[i].intereses+' Saldo: '+result[i].saldo+'</strong><small>'+result[i].comentario+'</small></li>';  
+      template += '<li class="thumb selectable" id="'+result[i].id+'"><strong><a href="#historialArt" data-router="article">'+ result[i].name+'</a></strong></li>';  
     } 
     html = Mustache.render(template);
-    $$('#ulhistorial').html(html); //Aqui es donde se 'pintaría' los datos que estamos consumiendo en JSON  
+    $$('#ulhistorial').html(html); //Aqui es donde se 'pintaría' los datos
+  }//End allusers
+
+  Lungo.Data.Sql.select('users', '', allUser);
+}
+//Buscar el historial para un usuario
+function getHistorial(userId){
+  var template='', html, allPagos,i;
+  
+  allPagos = function(result){
+    console.log(result);
+    if (result == '') {
+      template = '<li>Este usuario no tiene pagos</li>';
+    }else{
+      for(i=0, len = result.length; i < len; i++){
+        template += '<li id="'+result[i].id+'"><div class="right">'+result[i].fecha_pago +' - '+result[i].fecha_hasta +'</div><strong>Abono: '+ result[i].abono+' Intereses: '+result[i].intereses+' Saldo: '+result[i].saldo+'</strong><small>'+result[i].comentario+'</small></li>';  
+      } 
+    }
+    html = Mustache.render(template);
+    $$('#historial').html(html); //Aqui es donde se 'pintaría' los datos 
   }//End allPagos
 
-  Lungo.Data.Sql.select('pagos', '', allPagos);
+  Lungo.Data.Sql.select('pagos', {user_id: userId}, allPagos);
+  
 }
