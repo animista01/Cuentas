@@ -53,7 +53,7 @@
 </head>
 
 <body class="app">
-    <section id="main" data-transition="">
+    <section id="main" data-transition="slide">
         <header>
             <nav class="left">
                 <a href="#features" data-router="aside" data-icon="menu"></a>
@@ -62,6 +62,12 @@
         </header>
 
         <article id="main-article" class="active list indented scroll">
+            <div class="left">
+                <li>Usuarios</li>
+            </div>
+            <br><br><br>
+            <li class="anchor"></li>
+            <ul id="users"></ul>
         </article>
 
         <article id="second-article" class="indented splash">
@@ -72,10 +78,26 @@
                 <a href="#" id="aCrearUsu" class="button blue" data-icon="plus" data-label="Crear"></a>
             </form>
         </article>
+
+        <article id="historial-article" class="list indented scroll">
+            <div class="left">
+                <li>Historial</li>
+            </div>
+            <br><br><br>
+            <ul id="ulhistorial"></ul>
+        </article>
+    </section>
+
+    <section id="agregarPagoUsu" data-transition="slide">
+        <header data-back="left" data-title="Pago"></header>
+        <article id="pagos-article" class="active splash">
+            <div class="form" id="divform">
+            </div>
+        </article>
     </section>
 
     <aside id="features">
-        <header data-title="Options"></header>
+        <header data-title="Opciones"></header>
         <article class="active list">
             <ul>
                 <li class="current">
@@ -88,35 +110,15 @@
                         <strong>Agregar Usuario</strong>
                     </a>
                 </li>
+                <li>
+                    <a href="#historial-article" data-router="article">
+                        <strong>Historial</strong>
+                    </a>
+                </li>
             </ul>
         </article>
     </aside>
 
-    <section id="agregarPagoUsu" data-transition="slide">
-        <article id="second-article" class="indented splash">
-            <form>
-                <fieldset data-icon="calendar">
-                    <input type="date" id="fechapago" placeholder="Fecha de Pago" />
-                </fieldset>
-                <fieldset data-icon="mail">
-                    <input type="date" id="email" placeholder="Hasta" />
-                </fieldset>
-                <fieldset data-icon="vcard">
-                    <input type="number" id="interes" placeholder="Intereses" />
-                </fieldset>
-                <fieldset data-icon="vcard">
-                    <input type="number" id="abono" placeholder="Abono" />
-                </fieldset>
-                <fieldset data-icon="vcard">
-                    <input type="number" id="saldo" placeholder="Saldo" />
-                </fieldset>
-                <fieldset data-icon="message">
-                    <textarea name="comentario" id="comentario" placeholder="Comentario"></textarea>
-                </fieldset>
-                <a href="#" id="aEnviarRegistro" class="button blue" data-icon="plus" data-label="Crear"></a>
-            </form>
-        </article>
-    </section>
 
     <!-- Lungo - Dependencies -->
     <script src="components/quojs/quo.js"></script>

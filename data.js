@@ -15,38 +15,34 @@ var CONFIG = {
         name: 'pagos',
         drop: false, 
         fields:{
-            id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
-            user_id: 'INTEGER',
-            fecha_pago: 'DATETIME',
-            fecha_hasta: 'DATETIME',
-            intereses: 'INTEGER',
-            abono: 'INTEGER',
-            saldo: 'INTEGER',
-            comentario: 'TEXT'
+          id: 'INTEGER PRIMARY KEY AUTOINCREMENT',
+          abono: 'INTEGER',
+          comentario: 'TEXT',
+          fecha_hasta: 'DATETIME',
+          fecha_pago: 'DATETIME',
+          intereses: 'INTEGER',
+          saldo: 'INTEGER',
+          user_id: 'INTEGER'
         }
     }
   ]
 };
 Lungo.Data.Sql.init(CONFIG);
 
+
 //Trae todos los usuarios
-var allUser = function(){
-  Lungo.Data.Sql.select('users', '', function(result){
-    console.log(result);
+function getUsers(){
+  var template='', html, allUser,i;
 
-    var template,html;
+  allUser = function(result){
+    for(i=0, len = result.length; i < len; i++){
+      template += '<li class="thumb selectable" id="'+result[i].id+'"><strong><a href="#agregarPagoUsu" data-router="section">'+ result[i].name+'</a></strong></li>';  
+    } 
+    html = Mustache.render(template);
+    $$('#users').html(html); //Aqui es donde se 'pintaría' los datos que estamos consumiendo en JSON  
+  }//End allusers
 
-    //Mostrar la info recibida
-    template ='<li>Usuarios</li>\
-                    <li class="anchor"></li>\
-                    <ul>\
-                     <li class="thumb selectable" id="{{id}}">\
-                        <strong>{{name}}</strong>\
-                    </li>\
-                    </ul>';
-        html = Mustache.render(template,result);
-        $$('#main-article').html(html); //Aqui es donde se 'pintaría' los datos que estamos consumiendo en JSON
-  });
+  Lungo.Data.Sql.select('users', '', allUser);
 }
 
 
@@ -57,4 +53,28 @@ var cacheUsers = function(user) {
 
 return {
   cacheUsers: cacheUsers
+}
+
+//Insertar un pago
+
+function insertPago(data){
+  Lungo.Data.Sql.insert('pagos', data);  
+}
+
+return {
+  insertPago: insertPago
+}
+
+function getHistorial(){
+  var template='', html, allPagos,i;
+
+  allPagos = function(result){
+    for(i=0, len = result.length; i < len; i++){
+      template += '<li id="'+result[i].id+'"><div class="right">'+result[i].fecha_pago +' - '+result[i].fecha_hasta +'</div><strong>Abono: '+ result[i].abono+' Intereses: '+result[i].intereses+' Saldo: '+result[i].saldo+'</strong><small>'+result[i].comentario+'</small></li>';  
+    } 
+    html = Mustache.render(template);
+    $$('#ulhistorial').html(html); //Aqui es donde se 'pintaría' los datos que estamos consumiendo en JSON  
+  }//End allPagos
+
+  Lungo.Data.Sql.select('pagos', '', allPagos);
 }
