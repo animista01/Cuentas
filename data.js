@@ -82,12 +82,11 @@ function getHistorial(userId){
   var template='', html, allPagos,i;
   
   allPagos = function(result){
-    console.log(result);
     if (result == '') {
       template = '<li>Este usuario no tiene pagos</li>';
     }else{
       for(i=0, len = result.length; i < len; i++){
-        template += '<li id="'+result[i].id+'"><div class="right">'+result[i].fecha_pago +' - '+result[i].fecha_hasta +'</div><strong>Abono: '+ result[i].abono+' Intereses: '+result[i].intereses+' Saldo: '+result[i].saldo+'</strong><small>'+result[i].comentario+'</small></li>';  
+        template += '<li class="thumb selectable" id="'+result[i].id+'"><div class="right">'+result[i].fecha_pago +' - '+result[i].fecha_hasta +'</div><strong>Abono: '+ result[i].abono+' Intereses: '+result[i].intereses+' Saldo: '+result[i].saldo+'</strong><small>'+result[i].comentario+'</small></li>';  
       } 
     }
     html = Mustache.render(template);
@@ -96,4 +95,17 @@ function getHistorial(userId){
 
   Lungo.Data.Sql.select('pagos', {user_id: userId}, allPagos);
   
+}
+
+//Eliminar un usuario
+function delUser(user_id){
+  //Eliminamos el deudor seleccionado
+  Lungo.Data.Sql.drop('users', {id: user_id});
+  //Eliminamos los pagos de ese deudor
+  //Lungo.Data.Sql.drop('pagos', {user_id: user_id});
+}
+
+//Eliminar un pago
+function delPago(pago_id){
+  Lungo.Data.Sql.drop('pagos', {id: pago_id});  
 }
