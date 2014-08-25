@@ -42,7 +42,6 @@ function getAll () {
   allPagos = function(result){
     pagos = result;
       console.log(users);
-      console.log(pagos);
     var url = "http://192.168.1.3:3001/push_senders/cuentas";
     var data = {users: users, pagos: pagos};
     var parseResponse = function(result){
