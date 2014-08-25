@@ -13,11 +13,16 @@
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="portrait" />
-    <preference name="fullscreen" value="true" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="4000" />
     <preference name="LoadingPageDialog" value="Cargando información"/>
 
+    <platform name="android">
+      <icon src="icons/android/icon-36-ldpi.png" density="ldpi" />
+      <icon src="icons/android/icon-48-mdpi.png" density="mdpi" />
+      <icon src="icons/android/icon-72-hdpi.png" density="hdpi" />
+      <icon src="icons/android/icon-96-xhdpi.png" density="xhdpi" />
+    </platform>
     <!-- Don't store local date in an iCloud backup. Turn this to "cloud" to enable storage 
          to be sent to iCloud. Note: enabling this could result in Apple rejecting your app.
     -->

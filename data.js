@@ -42,13 +42,8 @@ function getAll () {
   allPagos = function(result){
     pagos = result;
       console.log(users);
-    var url = "http://192.168.1.3:3001/push_senders/cuentas";
-    var data = {users: users, pagos: pagos};
-    var parseResponse = function(result){
-      console.log(result)
-    };
-
-    Lungo.Service.post(url, users, parseResponse, "json");
+    alert(users);
+    alert(pagos);
   }//End allusers
   Lungo.Data.Sql.select('pagos', '', allPagos);
 
