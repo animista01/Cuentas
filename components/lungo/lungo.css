@@ -8,7 +8,7 @@ a:hover{opacity:1}
 img{border:0;-ms-interpolation-mode:bicubic;vertical-align:middle;font-size:0}
 table{border-collapse:collapse;border-spacing:0}
 th,td,caption{vertical-align:top;text-align:left}
-
+.red{background-color: #e33100;}
 body[data-position="absolute"] > section{position:absolute}
 body[data-position="fixed"] > section{position:fixed}
 body [data-transition]{display:block !important;-webkit-transition-property:opacity z-index transform;-moz-transition-property:opacity z-index transform;transition-property:opacity z-index transform;-webkit-transition-duration:350ms;-moz-transition-duration:350ms;transition-duration:350ms;-webkit-transition-timing-function:easeOutSine;-moz-transition-timing-function:easeOutSine;transition-timing-function:easeOutSine;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden}

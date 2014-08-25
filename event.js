@@ -6,6 +6,10 @@ Lungo.dom('#main-article').on('load', function(){
 	getUsers();   
 });
 
+$$('#all').tap(function () {
+	getAll();
+});
+
 //Crear un nuevo deudor
 $$('#aCrearUsu').tap(function() {
 	var name = Lungo.dom('#nombreUsu').val();
@@ -19,11 +23,35 @@ $$('#aCrearUsu').tap(function() {
 	}
 });
 
-//Traer todos los deudores
-$$('ul#users li').tap(function() {
-	var template,html;
+//Mostrar el historial del user y con el menu de acciones
+$$('#users li').tap(function() {
 	var user = Lungo.dom(this);
 	var user_id = user.attr('id');
+	var tempdos,html2;
+
+	getHistorial(user_id);
+
+	tempdos = '<nav>\
+	            	<a href="#" id="'+user_id+'" data-action="agregar">\
+						<span class="icon plus"></span>\
+	            	</a>\
+	            	<a href="#" id="'+user_id+'" data-action="editar">\
+	            		<span class="icon pencil"></span>\
+	            	</a>\
+	            	<a href="#" id="'+user_id+'" class="red" data-action="eliminar">\
+						<span class="icon remove"></span>\
+	            	</a>\
+	            </nav>';
+	html2 = Mustache.render(tempdos);
+    $$('#footerUserAction').html(html2); //Aqui es donde se 'pintaría' los datos   
+    Lungo.Router.section('userAction');
+});
+
+//Cargar form de nuevo pago
+$$('a[data-action=agregar]').tap(function(){
+	var user = Lungo.dom(this);
+	var user_id = user.attr('id');
+	var template,html;
 
 	template = '<input type="hidden" id="id_usu" value="'+user_id+'"/>\
 				<fieldset>\
@@ -49,23 +77,20 @@ $$('ul#users li').tap(function() {
     html = Mustache.render(template);
     $$('#divform').html(html); //Aqui es donde se 'pintaría' los datos
 
-    footerPago(user_id);
-});
-
-function footerPago(user_id){
+    footerAgregarPago();
+    Lungo.Router.section('agregarPagoUsu');
+}); 
+//Footer para agregar un pago al user
+function footerAgregarPago(){
 	var tempdos,html2;
 	tempdos = '<nav>\
-	            	<a href="#" id="'+user_id+'" class="active">\
-	            		<span class="icon remove"></span>\
-	            	</a>\
-	            	<a href="#" class="" data-action="guardar">\
-						<span class="icon check"></span>\
-	            	</a>\
-	            </nav>';
+            	<a href="#" data-action="guardar">\
+					<span class="icon check"></span>\
+            	</a>\
+            </nav>';
 	html2 = Mustache.render(tempdos);
-    $$('#footerPago').html(html2); //Aqui es donde se 'pintaría' los datos   
+    $$('#footerPago').html(html2); //Aqui es donde se 'pintaría' los datos 
 }
-
 //Guardar un pago a un deudor
 $$('a[data-action=guardar]').tap(function() {
 	var id_usu = Lungo.dom('#id_usu').val();
@@ -88,23 +113,37 @@ $$('a[data-action=guardar]').tap(function() {
     Lungo.dom('#comentario').val('');
 
 	Lungo.Notification.success('success', 'Pago Guardado :)', 'thumbs-up', 2);
-	// Si todo fue correcto cargamos la seccion principal, usando Router
+	
+	getHistorial(id_usu);
     Lungo.Router.back();
 });
 
-//Traer todos los deudores para sacarle su historial de pagos
-$$('#historial-article').on('load', function() {
-	getUserHistorial();   
+//Editar un Pago
+$$('ul#historial li.thumb').tap(function(){
+	var pago = Lungo.dom(this);
+	var pago_id = pago.attr('id');
+	getPago(pago_id);
+    footerEditPago(pago_id);
+    Lungo.Router.section('EditarPago');
 });
-//Historial del deudores seleccionado
-$$('ul#ulhistorial li').tap(function(){
-	var user = Lungo.dom(this);
-	var user_id = user.attr('id');
-	getHistorial(user_id);   
-});
-
-//Preguntar si quiere o no eliminar un pago de un deudor
-$$('ul#historial li').tap(function(){
+function footerEditPago () {
+	var tempdos,html2;
+	tempdos = '<nav>\
+            	<a href="#" data-action="saveEditPago">\
+					<span class="icon check"></span>\
+            	</a>\
+            </nav>';
+	html2 = Mustache.render(tempdos);
+    $$('#footerEditPago').html(html2); //Aqui es donde se 'pintaría' los datos 
+}
+$$('a[data-action=saveEditPago]').tap(function(){
+	var ids = {id_pago: Lungo.dom('#id_pago').val(), user_id: Lungo.dom('#user_id').val()};
+	var arreglo = {abono: Lungo.dom('#abono').val(), comentario: Lungo.dom('#comentario').val(), fecha_hasta: Lungo.dom('#fecha_hasta').val(), fecha_pago: Lungo.dom('#fecha_pago').val(), intereses: Lungo.dom('#intereses').val(), saldo: Lungo.dom('#saldo').val()};
+	editPago(ids, arreglo);
+})
+//Eliminar un Pago
+$$('ul#historial li.thumb').hold(function(){
+	console.log("hey"); 
 	var pago = Lungo.dom(this);
 	var pago_id = pago.attr('id');
 
@@ -127,8 +166,8 @@ $$('ul#historial li').tap(function(){
 	    }
 	});  
 });
-
-$$('footer#footerPago nav a.active').tap(function(){
+//Eliminar a un deudor
+$$('a[data-action=eliminar]').tap(function(){
 	var deudor = Lungo.dom(this);
 	var deudor_id = deudor.attr('id');
 
@@ -150,5 +189,27 @@ $$('footer#footerPago nav a.active').tap(function(){
 	        callback: function(){}
 	    }
 	});
-	
+});
+//Editar a un usuario
+$$('a[data-action=editar]').tap(function () {
+	var user = Lungo.dom(this);
+	var user_id = user.attr('id');
+	getUser(user_id);
+    footerEdit(user_id);
+    Lungo.Router.section('EditarUser');
+});
+function footerEdit (user_id) {
+	var tempdos,html2;
+	tempdos = '<nav>\
+            	<a href="#" id="'+user_id+'" data-action="saveEdit">\
+					<span class="icon check"></span>\
+            	</a>\
+            </nav>';
+	html2 = Mustache.render(tempdos);
+    $$('#footerEdit').html(html2); //Aqui es donde se 'pintaría' los datos 
+}
+$$('a[data-action=saveEdit]').tap(function(){
+	var id_usu = Lungo.dom('#id_usu').val();
+	var name = Lungo.dom('#nameUser').val();
+	editUser(id_usu, name);
 });
